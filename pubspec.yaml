@@ -1,0 +1,71 @@
+name: password_manager
+description: Local-First Password Manager — Secure Vault for Android.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ── State Management ──────────────────────────────────────────
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.3.5
+
+  # ── Immutable Models ──────────────────────────────────────────
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # ── Dependency Injection ──────────────────────────────────────
+  get_it: ^8.0.3
+  injectable: ^2.5.0
+
+  # ── Navigation ────────────────────────────────────────────────
+  go_router: ^14.8.1
+
+  # ── Database (Drift / SQLite) ─────────────────────────────────
+  drift: ^2.23.1
+  drift_flutter: ^0.2.4
+
+  # ── Secure Storage (Android Keystore) ────────────────────────
+  flutter_secure_storage: ^9.2.2
+
+  # ── Cryptography (AES-256-GCM + Argon2id) ────────────────────
+  cryptography: ^2.7.0
+
+  # ── Biometrics ────────────────────────────────────────────────
+  local_auth: ^2.3.0
+
+  # ── Screen Security (FLAG_SECURE) ────────────────────────────
+
+  # ── Utilities ─────────────────────────────────────────────────
+  uuid: ^4.5.1
+  equatable: ^2.0.7
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  intl: ^0.20.2
+  screen_protector: ^1.5.1
+  otp: ^3.2.0
+  share_plus: ^12.0.2
+  file_picker: ^10.3.10
+  mobile_scanner: ^7.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # ── Code Generation ───────────────────────────────────────────
+  build_runner: ^2.4.15
+  freezed: ^2.5.7
+  json_serializable: ^6.9.0
+  riverpod_generator: ^2.4.3
+  injectable_generator: ^2.6.2
+  drift_dev: ^2.23.1
+
+  # ── Linting ───────────────────────────────────────────────────
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+class SecureTextField extends StatefulWidget {
+  const SecureTextField({
+    super.key,
+    required this.controller,
+    required this.label,
+    this.hint,
+    this.validator,
+    this.textInputAction = TextInputAction.next,
+    this.onSubmitted,
+    this.autofocus = false,
+    this.enabled = true,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final String? hint;
+  final String? Function(String?)? validator;
+  final TextInputAction textInputAction;
+  final void Function(String)? onSubmitted;
+  final bool autofocus;
+  final bool enabled;
+
+  @override
+  State<SecureTextField> createState() => _SecureTextFieldState();
+}
+
+class _SecureTextFieldState extends State<SecureTextField> {
+  bool _obscure = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: widget.controller,
+      obscureText: _obscure,
+      autofocus: widget.autofocus,
+      enabled: widget.enabled,
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onSubmitted,
+      validator: widget.validator,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        letterSpacing: 1.5,
+      ),
+      decoration: InputDecoration(
+        labelText: widget.label,
+        hintText: widget.hint,
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscure ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+            color: const Color(0xFF9E9EBF),
+            size: 20,
+          ),
+          onPressed: () => setState(() => _obscure = !_obscure),
+        ),
+      ),
+    );
+  }
+}

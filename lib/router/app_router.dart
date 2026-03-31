@@ -1,0 +1,162 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../features/credentials/presentation/credential_detail_screen.dart';
+import '../features/credentials/presentation/credential_form_screen.dart';
+import '../features/credentials/presentation/home_screen.dart';
+import '../features/credentials/presentation/security_audit_screen.dart';
+import '../features/settings/presentation/settings_screen.dart';
+import '../features/vault_access/application/vault_state_provider.dart';
+import '../features/vault_access/presentation/recovery_screen.dart';
+import '../features/vault_access/presentation/setup_screen.dart';
+import '../features/vault_access/presentation/splash_screen.dart';
+import '../features/vault_access/presentation/unlock_screen.dart';
+import '../features/credentials/presentation/qr_scanner_screen.dart';
+import '../features/folders/presentation/folder_screen.dart';
+
+// ── Route constants ───────────────────────────────────────────────────────────
+
+abstract final class AppRoutes {
+  static const splash           = '/';
+  static const setup            = '/setup';
+  static const unlock           = '/unlock';
+  static const recovery         = '/recovery';
+  static const home             = '/home';
+  static const credentialDetail = '/credentials/:id';
+  static const credentialEdit   = '/credentials/:id/edit';
+  static const credentialCreate = '/credentials/create';
+  static const folderDetail     = '/folders/:id';
+  static const settings         = '/settings';
+  static const securityAudit   = '/security-audit';
+  static const qrScanner        = '/qr-scanner';
+}
+
+// ── RouterNotifier ────────────────────────────────────────────────────────────
+// Wraps the VaultState into a ChangeNotifier so GoRouter can listen to it
+// WITHOUT recreating the router instance on every state change.
+
+class _RouterNotifier extends ChangeNotifier {
+  _RouterNotifier(this._ref) {
+    _ref.listen<VaultState>(
+      vaultNotifierProvider,
+      (_, _) => notifyListeners(),
+    );
+  }
+
+  final Ref _ref;
+
+  VaultState get _state => _ref.read(vaultNotifierProvider);
+
+  String? redirect(_, GoRouterState routerState) {
+    final vaultState = _state;
+
+    // While loading never redirect — avoid interrupting async unlock flows
+    final isLoading = vaultState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
+    if (isLoading) return null;
+
+    final isUnlocked = vaultState.maybeWhen(
+      unlocked: (_) => true,
+      orElse: () => false,
+    );
+
+    final loc = routerState.matchedLocation;
+
+    final onProtected = loc.startsWith('/home') ||
+        loc.startsWith('/credentials') ||
+        loc.startsWith('/password') ||
+        loc.startsWith('/settings') ||
+        loc.startsWith('/security-audit') ||
+        loc.startsWith('/qr-scanner');
+
+    // Redirect to unlock if trying to access protected routes while locked
+    if (onProtected && !isUnlocked) return AppRoutes.unlock;
+
+    // If already unlocked and still on unlock/splash, go home
+    if (isUnlocked &&
+        (loc == AppRoutes.unlock || loc == AppRoutes.splash)) {
+      return AppRoutes.home;
+    }
+
+    return null;
+  }
+}
+
+// ── Stable provider — GoRouter is created ONCE, never recreated ───────────────
+
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final notifier = _RouterNotifier(ref);
+
+  final router = GoRouter(
+    initialLocation: AppRoutes.splash,
+    debugLogDiagnostics: false,
+    refreshListenable: notifier,
+    redirect: notifier.redirect,
+    routes: [
+      GoRoute(
+        path: AppRoutes.splash,
+        builder: (_, _) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.setup,
+        builder: (_, _) => const SetupScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.unlock,
+        builder: (_, _) => const UnlockScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.home,
+        builder: (_, _) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.credentialCreate,
+        builder: (_, _) => const CredentialFormScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.credentialDetail,
+        builder: (context, state) => CredentialDetailScreen(
+          credentialId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.credentialEdit,
+        builder: (_, state) => CredentialFormScreen(
+          existingId: state.pathParameters['id'],
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.folderDetail,
+        builder: (context, state) => FolderScreen(
+          folderId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (_, _) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.securityAudit,
+        builder: (_, _) => const SecurityAuditScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.recovery,
+        builder: (_, _) => const RecoveryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.qrScanner,
+        builder: (_, _) => const QrScannerScreen(),
+      ),
+    ],
+  );
+
+  ref.onDispose(() {
+    notifier.dispose();
+    router.dispose();
+  });
+
+  return router;
+});

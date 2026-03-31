@@ -1,0 +1,256 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'app_security_settings.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
+
+AppSecuritySettings _$AppSecuritySettingsFromJson(Map<String, dynamic> json) {
+  return _AppSecuritySettings.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AppSecuritySettings {
+  int get autoLockMinutes => throw _privateConstructorUsedError;
+  int get clearClipboardSeconds => throw _privateConstructorUsedError;
+  bool get biometricEnabled => throw _privateConstructorUsedError;
+  bool get obscureOnBackground => throw _privateConstructorUsedError;
+
+  /// Serializes this AppSecuritySettings to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of AppSecuritySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AppSecuritySettingsCopyWith<AppSecuritySettings> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AppSecuritySettingsCopyWith<$Res> {
+  factory $AppSecuritySettingsCopyWith(
+    AppSecuritySettings value,
+    $Res Function(AppSecuritySettings) then,
+  ) = _$AppSecuritySettingsCopyWithImpl<$Res, AppSecuritySettings>;
+  @useResult
+  $Res call({
+    int autoLockMinutes,
+    int clearClipboardSeconds,
+    bool biometricEnabled,
+    bool obscureOnBackground,
+  });
+}
+
+/// @nodoc
+class _$AppSecuritySettingsCopyWithImpl<$Res, $Val extends AppSecuritySettings>
+    implements $AppSecuritySettingsCopyWith<$Res> {
+  _$AppSecuritySettingsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of AppSecuritySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? autoLockMinutes = null,
+    Object? clearClipboardSeconds = null,
+    Object? biometricEnabled = null,
+    Object? obscureOnBackground = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            autoLockMinutes: null == autoLockMinutes
+                ? _value.autoLockMinutes
+                : autoLockMinutes // ignore: cast_nullable_to_non_nullable
+                      as int,
+            clearClipboardSeconds: null == clearClipboardSeconds
+                ? _value.clearClipboardSeconds
+                : clearClipboardSeconds // ignore: cast_nullable_to_non_nullable
+                      as int,
+            biometricEnabled: null == biometricEnabled
+                ? _value.biometricEnabled
+                : biometricEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            obscureOnBackground: null == obscureOnBackground
+                ? _value.obscureOnBackground
+                : obscureOnBackground // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$AppSecuritySettingsImplCopyWith<$Res>
+    implements $AppSecuritySettingsCopyWith<$Res> {
+  factory _$$AppSecuritySettingsImplCopyWith(
+    _$AppSecuritySettingsImpl value,
+    $Res Function(_$AppSecuritySettingsImpl) then,
+  ) = __$$AppSecuritySettingsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    int autoLockMinutes,
+    int clearClipboardSeconds,
+    bool biometricEnabled,
+    bool obscureOnBackground,
+  });
+}
+
+/// @nodoc
+class __$$AppSecuritySettingsImplCopyWithImpl<$Res>
+    extends _$AppSecuritySettingsCopyWithImpl<$Res, _$AppSecuritySettingsImpl>
+    implements _$$AppSecuritySettingsImplCopyWith<$Res> {
+  __$$AppSecuritySettingsImplCopyWithImpl(
+    _$AppSecuritySettingsImpl _value,
+    $Res Function(_$AppSecuritySettingsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AppSecuritySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? autoLockMinutes = null,
+    Object? clearClipboardSeconds = null,
+    Object? biometricEnabled = null,
+    Object? obscureOnBackground = null,
+  }) {
+    return _then(
+      _$AppSecuritySettingsImpl(
+        autoLockMinutes: null == autoLockMinutes
+            ? _value.autoLockMinutes
+            : autoLockMinutes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        clearClipboardSeconds: null == clearClipboardSeconds
+            ? _value.clearClipboardSeconds
+            : clearClipboardSeconds // ignore: cast_nullable_to_non_nullable
+                  as int,
+        biometricEnabled: null == biometricEnabled
+            ? _value.biometricEnabled
+            : biometricEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        obscureOnBackground: null == obscureOnBackground
+            ? _value.obscureOnBackground
+            : obscureOnBackground // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AppSecuritySettingsImpl implements _AppSecuritySettings {
+  const _$AppSecuritySettingsImpl({
+    this.autoLockMinutes = 5,
+    this.clearClipboardSeconds = 30,
+    this.biometricEnabled = false,
+    this.obscureOnBackground = true,
+  });
+
+  factory _$AppSecuritySettingsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AppSecuritySettingsImplFromJson(json);
+
+  @override
+  @JsonKey()
+  final int autoLockMinutes;
+  @override
+  @JsonKey()
+  final int clearClipboardSeconds;
+  @override
+  @JsonKey()
+  final bool biometricEnabled;
+  @override
+  @JsonKey()
+  final bool obscureOnBackground;
+
+  @override
+  String toString() {
+    return 'AppSecuritySettings(autoLockMinutes: $autoLockMinutes, clearClipboardSeconds: $clearClipboardSeconds, biometricEnabled: $biometricEnabled, obscureOnBackground: $obscureOnBackground)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AppSecuritySettingsImpl &&
+            (identical(other.autoLockMinutes, autoLockMinutes) ||
+                other.autoLockMinutes == autoLockMinutes) &&
+            (identical(other.clearClipboardSeconds, clearClipboardSeconds) ||
+                other.clearClipboardSeconds == clearClipboardSeconds) &&
+            (identical(other.biometricEnabled, biometricEnabled) ||
+                other.biometricEnabled == biometricEnabled) &&
+            (identical(other.obscureOnBackground, obscureOnBackground) ||
+                other.obscureOnBackground == obscureOnBackground));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    autoLockMinutes,
+    clearClipboardSeconds,
+    biometricEnabled,
+    obscureOnBackground,
+  );
+
+  /// Create a copy of AppSecuritySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AppSecuritySettingsImplCopyWith<_$AppSecuritySettingsImpl> get copyWith =>
+      __$$AppSecuritySettingsImplCopyWithImpl<_$AppSecuritySettingsImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AppSecuritySettingsImplToJson(this);
+  }
+}
+
+abstract class _AppSecuritySettings implements AppSecuritySettings {
+  const factory _AppSecuritySettings({
+    final int autoLockMinutes,
+    final int clearClipboardSeconds,
+    final bool biometricEnabled,
+    final bool obscureOnBackground,
+  }) = _$AppSecuritySettingsImpl;
+
+  factory _AppSecuritySettings.fromJson(Map<String, dynamic> json) =
+      _$AppSecuritySettingsImpl.fromJson;
+
+  @override
+  int get autoLockMinutes;
+  @override
+  int get clearClipboardSeconds;
+  @override
+  bool get biometricEnabled;
+  @override
+  bool get obscureOnBackground;
+
+  /// Create a copy of AppSecuritySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AppSecuritySettingsImplCopyWith<_$AppSecuritySettingsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

@@ -1,0 +1,38 @@
+# Posibles Mejoras y Futuras Características (VaultGuard)
+
+Este documento contiene un conjunto de ideas, expansiones funcionales y mecánicas avanzadas sugeridas para iteraciones futuras en el desarrollo de la aplicación. Representan adiciones lógicas que potenciarían a VaultGuard para competir contra soluciones comerciales modernas.
+
+## 🔐 1. Seguridad Avanzada y Biometría Estricta
+
+*   **Autenticación en Interacciones Específicas:** Solicitar validación biométrica obligatoria (huella o Face ID) justo antes de permitir copiar una contraseña al portapapeles o revelar un campo sensible (`obscureText = false`).
+*   **Soporte de Passkeys:** Permitir el almacenamiento integrado de FIDO2 / WebAuthn Passkeys utilizando las APIs nativas de Android (Credential Manager) e iOS (Authentication Services).
+*   **Llaves Físicas (NFC/USB):** Soporte para YubiKey. Requerir el toque de una llave física NFC para descifrar la capa más profunda de la bóveda o actuar como 2FA maestro.
+*   **Teclado Seguro Interno (Scrambled Keypad):** Un teclado en pantalla que aleatorice la posición de las teclas al momento de introducir el PIN maestro, protegiendo contra huellas térmicas o grabaciones de la pantalla.
+
+## ☁️ 2. Exportación y Sincronización Local-First
+
+*   **Exportación/Importación Segura Binaria:** Capacidad de empacar la base de datos completa de SQLite en un archivo cifrado propio (ej. `.vgvault`) con una contraseña desechable (distinta a la maestra) para poder transportarla entre dispositivos locales sin nubes.
+*   **Exportación a Formatos Abiertos (CSV/JSON):** Permitir volcar los datos a CSV plano (con advertencia de extrema sensibilidad) para compatibilidad con migración a otros gestores comunes (Bitwarden, 1Password, etc.).
+*   **Sincronización P2P / WiFi Local:** Mantener VaultGuard como "Local-First" sincronizando bóvedas directamente por WiFi o Bluetooth entre el teléfono del usuario y su PC, sin pasar por servidores en la nube.
+
+## 🌐 3. Integración con el Sistema Operativo
+
+*   **Servicio de Autocompletado del SO (Autofill API):**
+    *   **Android:** Integración con *AutofillService* para que VaultGuard sugiera credenciales automáticamente cuando el usuario abra una app como Twitter o Netflix, o un formulario en el navegador web Chrome.
+    *   **iOS:** Extensión de *AutoFill Credential Provider* para la misma funcionalidad en Safari o apps.
+*   **Integración con Accesos Directos (Quick Settings / Tiles):** Botón nativo en la barra de ajustes de Android para bloquear inmediatamente la bóveda sin entrar a la aplicación.
+*   **Widgets Nativos de Pantalla de Inicio:** Widget opaco que al pulsarlo pida huella e inicie inmediatamente en "Crear Credencial" o un contador interactivo para los TOTPs favoritos sin abrir de lleno la aplicación principal.
+
+## 🔍 4. Auditoría Extendida
+
+*   **Integración de API de Brechas (HaveIBeenPwned):** Función de auditoría activable (opt-in) que envíe anónimamente los 5 primeros caracteres del hash SHA-1 de las contraseñas guardadas (tecnología *k-Anonymity*) para verificar continuamente si alguna contraseña ha sido filtrada en internet.
+*   **Historial de Contraseñas Anteriores:** Si un usuario cambia la contraseña de "Facebook" en 2026, mantener las contraseñas previas de 2025 o 2024 almacenadas automáticamente en un sub-campo oculto en caso de que alguien secuestre la cuenta vieja.
+
+## 👥 5. Uso Compartido (Compartición Zero-Knowledge)
+
+*   **"VaultDrop" o Compartición de Secretos Segura:** Sistema mediante código QR que contenga un enlace efímero cifrado para pasarle temporalmente la contraseña de Netflix a un familiar de a lado de forma segura.
+
+## 🎨 6. Refinamiento en Categorías y Data
+
+*   **Iconos Automáticos / Favicons:** Al ingresar un sitio web como `netflix.com`, que la aplicación descargue automáticamente (y almacene como BLOB binario) el favicon del logotipo del servicio, para darle un look mucho más corporativo a la bóveda visual.
+*   **Etiquetas Combinadas (Tags):** Aparte de "Carpetas", permitir agrupar por etiquetas (`#Trabajo`, `#Streaming`, `#Bancos`) donde una misma credencial pueda tener más de una sola etiqueta a la vez.

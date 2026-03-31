@@ -1,0 +1,372 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../app/di/injection.dart';
+import '../../../core/infrastructure/security/app_lifecycle_observer.dart';
+import '../../../core/infrastructure/security/session_manager.dart';
+import '../../../shared/widgets/vault_app_bar.dart';
+import '../../vault_access/application/vault_state_provider.dart';
+import '../domain/entities/app_security_settings.dart';
+import '../domain/repositories/i_settings_repository.dart';
+
+part 'settings_screen.g.dart';
+
+// ── Settings provider ─────────────────────────────────────────────────────────
+
+@riverpod
+class SettingsNotifier extends _$SettingsNotifier {
+  @override
+  Future<AppSecuritySettings> build() async {
+    return ref.read(settingsRepositoryProvider).getSettings();
+  }
+
+  Future<void> save(AppSecuritySettings settings) async {
+    final previous = state.valueOrNull;
+    state = AsyncData(settings);
+    await ref.read(settingsRepositoryProvider).saveSettings(settings);
+
+    // ── Side-effect: Biometric key persistence ────────────────────────────
+    if (previous != null &&
+        previous.biometricEnabled != settings.biometricEnabled) {
+      final storage = getIt<FlutterSecureStorage>();
+      if (settings.biometricEnabled) {
+        // Store current session key for future biometric unlocks
+        final session = getIt<SessionManager>();
+        final keyCopy = session.getKeyCopy();
+        if (keyCopy != null) {
+          await storage.write(
+            key: 'bio_master_key',
+            value: base64Encode(keyCopy),
+          );
+        }
+      } else {
+        // Wipe the stored biometric key
+        await storage.delete(key: 'bio_master_key');
+      }
+    }
+
+    // ── Side-effect: Screen protection toggle ────────────────────────────
+    if (previous != null &&
+        previous.obscureOnBackground != settings.obscureOnBackground) {
+      await getIt<AppLifecycleObserver>().syncScreenProtection();
+    }
+  }
+}
+
+@riverpod
+ISettingsRepository settingsRepository(Ref ref) {
+  throw UnimplementedError('Register via get_it override');
+}
+
+// ── Screen ────────────────────────────────────────────────────────────────────
+
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsAsync = ref.watch(settingsNotifierProvider);
+
+    return Scaffold(
+      appBar: const VaultAppBar(title: 'Ajustes de seguridad'),
+      body: settingsAsync.when(
+        loading: () =>
+            const Center(child: CircularProgressIndicator(color: Color(0xFF6C63FF))),
+        error: (e, _) => Center(child: Text('Error: $e')),
+        data: (settings) => _SettingsBody(
+          settings: settings,
+          onUpdate: (s) =>
+              ref.read(settingsNotifierProvider.notifier).save(s),
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsBody extends StatelessWidget {
+  const _SettingsBody({required this.settings, required this.onUpdate});
+
+  final AppSecuritySettings settings;
+  final ValueChanged<AppSecuritySettings> onUpdate;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        _SectionHeader(label: 'Bloqueo automático'),
+        const SizedBox(height: 8),
+        _SettingsCard(
+          children: [
+            _SliderTile(
+              icon: Icons.timer_rounded,
+              label: 'Bloqueo por inactividad',
+              valueLabel: '${settings.autoLockMinutes} min',
+              value: settings.autoLockMinutes.toDouble(),
+              min: 1,
+              max: 60,
+              divisions: 59,
+              onChanged: (v) => onUpdate(
+                settings.copyWith(autoLockMinutes: v.round()),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        _SectionHeader(label: 'Portapapeles'),
+        const SizedBox(height: 8),
+        _SettingsCard(
+          children: [
+            _SliderTile(
+              icon: Icons.content_paste_off_rounded,
+              label: 'Limpiar portapapeles',
+              valueLabel: '${settings.clearClipboardSeconds}s',
+              value: settings.clearClipboardSeconds.toDouble(),
+              min: 10,
+              max: 120,
+              divisions: 22,
+              onChanged: (v) => onUpdate(
+                settings.copyWith(clearClipboardSeconds: v.round()),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        _SectionHeader(label: 'Privacidad'),
+        const SizedBox(height: 8),
+        _SettingsCard(
+          children: [
+            _ToggleTile(
+              icon: Icons.fingerprint_rounded,
+              label: 'Desbloqueo biométrico',
+              subtitle: 'Usa huella dactilar o rostro',
+              value: settings.biometricEnabled,
+              onChanged: (v) => onUpdate(
+                settings.copyWith(biometricEnabled: v),
+              ),
+            ),
+            const _Divider(),
+            _ToggleTile(
+              icon: Icons.visibility_off_rounded,
+              label: 'Ocultar en segundo plano',
+              subtitle: 'Aplica pantalla de privacidad al cambiar de app',
+              value: settings.obscureOnBackground,
+              onChanged: (v) => onUpdate(
+                settings.copyWith(obscureOnBackground: v),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        _DangerZone(),
+      ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label.toUpperCase(),
+      style: const TextStyle(
+        color: Color(0xFF9E9EBF),
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1.2,
+      ),
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({required this.children});
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF16213E),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(children: children),
+    );
+  }
+}
+
+class _SliderTile extends StatelessWidget {
+  const _SliderTile({
+    required this.icon,
+    required this.label,
+    required this.valueLabel,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.divisions,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String label;
+  final String valueLabel;
+  final double value;
+  final double min;
+  final double max;
+  final int divisions;
+  final ValueChanged<double> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: const Color(0xFF6C63FF), size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6C63FF).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  valueLabel,
+                  style: const TextStyle(
+                    color: Color(0xFF6C63FF),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SliderTheme(
+            data: const SliderThemeData(
+              activeTrackColor: Color(0xFF6C63FF),
+              thumbColor: Color(0xFF6C63FF),
+              inactiveTrackColor: Color(0xFF2A2A4A),
+              overlayColor: Color(0x206C63FF),
+            ),
+            child: Slider(
+              value: value,
+              min: min,
+              max: max,
+              divisions: divisions,
+              onChanged: onChanged,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ToggleTile extends StatelessWidget {
+  const _ToggleTile({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, color: const Color(0xFF6C63FF), size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style:
+                        const TextStyle(color: Colors.white, fontSize: 14)),
+                Text(subtitle,
+                    style: const TextStyle(
+                        color: Color(0xFF9E9EBF), fontSize: 11)),
+              ],
+            ),
+          ),
+          Switch(
+            value: value,
+            activeTrackColor: const Color(0xFF6C63FF),
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(
+      height: 1,
+      indent: 48,
+      endIndent: 16,
+      color: Color(0xFF2A2A4A),
+    );
+  }
+}
+
+class _DangerZone extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeader(label: 'Zona peligrosa'),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF16213E),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+                color: const Color(0xFFCF6679).withValues(alpha: 0.3)),
+          ),
+          child: ListTile(
+            leading: const Icon(Icons.lock_reset_rounded,
+                color: Color(0xFFCF6679)),
+            title: const Text('Bloquear ahora',
+                style: TextStyle(color: Color(0xFFCF6679))),
+            subtitle: const Text('Cierra la sesión inmediatamente',
+                style: TextStyle(color: Color(0xFF9E9EBF), fontSize: 12)),
+            onTap: () {
+              ref.read(vaultNotifierProvider.notifier).lock();
+              Navigator.of(context).popUntil((r) => r.isFirst);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}

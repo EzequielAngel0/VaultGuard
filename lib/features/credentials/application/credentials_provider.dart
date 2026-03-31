@@ -1,0 +1,76 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../domain/entities/credential.dart';
+import 'credential_use_cases.dart';
+
+part 'credentials_provider.g.dart';
+
+@riverpod
+class CredentialsNotifier extends _$CredentialsNotifier {
+  @override
+  Future<List<Credential>> build() async {
+    return ref.read(getCredentialsUseCaseProvider).all();
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(getCredentialsUseCaseProvider).all(),
+    );
+  }
+
+  Future<void> save(Credential credential) async {
+    await ref.read(saveCredentialUseCaseProvider).create(credential);
+    await refresh();
+  }
+
+  Future<void> updateCredential(Credential credential) async {
+    await ref.read(saveCredentialUseCaseProvider).update(credential);
+    await refresh();
+  }
+
+  Future<void> delete(String id) async {
+    await ref.read(deleteCredentialUseCaseProvider).execute(id);
+    await refresh();
+  }
+}
+
+@riverpod
+class CredentialSearchNotifier extends _$CredentialSearchNotifier {
+  @override
+  String build() => '';
+
+  void update(String query) => state = query;
+}
+
+@riverpod
+Future<List<Credential>> filteredCredentials(Ref ref) async {
+  final query = ref.watch(credentialSearchNotifierProvider);
+  final credentials = await ref.watch(credentialsNotifierProvider.future);
+  
+  if (query.isEmpty) return credentials;
+  
+  final q = query.toLowerCase();
+  return credentials.where((c) =>
+      c.title.toLowerCase().contains(q) ||
+      (c.username?.toLowerCase().contains(q) ?? false) ||
+      (c.website?.toLowerCase().contains(q) ?? false)).toList();
+}
+
+// ── Use case providers ────────────────────────────────────────────────────────
+
+@riverpod
+GetCredentialsUseCase getCredentialsUseCase(Ref ref) {
+  throw UnimplementedError('Register via get_it override');
+}
+
+@riverpod
+SaveCredentialUseCase saveCredentialUseCase(Ref ref) {
+  throw UnimplementedError('Register via get_it override');
+}
+
+@riverpod
+DeleteCredentialUseCase deleteCredentialUseCase(Ref ref) {
+  throw UnimplementedError('Register via get_it override');
+}
