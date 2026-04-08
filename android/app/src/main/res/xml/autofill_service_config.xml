@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SoloKey AutofillService configuration.
+    Declares that this service can handle autofill for credential fields.
+    compatiblePackages: empty = compatible with all packages.
+-->
+<autofill-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="com.vaultguard.password_manager.MainActivity" />

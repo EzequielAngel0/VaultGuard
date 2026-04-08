@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -42,6 +42,15 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.addColumn(folderEntries, folderEntries.isFavorite);
+          }
+          if (from < 5) {
+            // folderId for credential entries — enables folder organisation
+            // for all types including passkeys.
+            // ignore: invalid_use_of_visible_for_testing_member
+            await m.addColumn(
+              credentialEntries,
+              credentialEntries.folderId as GeneratedColumn,
+            );
           }
         },
       );

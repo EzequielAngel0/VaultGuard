@@ -16,7 +16,7 @@ class AppLifecycleObserver with WidgetsBindingObserver {
   final SessionManager _sessionManager;
   final ISettingsRepository _settingsRepo;
 
-  static const _channel = MethodChannel('com.vaultguard/security');
+  static const _channel = MethodChannel('com.solokey/security');
 
   Timer? _inactivityTimer;
   DateTime? _backgroundedAt;

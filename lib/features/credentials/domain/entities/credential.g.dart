@@ -20,6 +20,28 @@ Map<String, dynamic> _$$CustomFieldImplToJson(_$CustomFieldImpl instance) =>
       'isSecret': instance.isSecret,
     };
 
+_$PasskeyMetadataImpl _$$PasskeyMetadataImplFromJson(
+  Map<String, dynamic> json,
+) => _$PasskeyMetadataImpl(
+  rpId: json['rpId'] as String,
+  rpName: json['rpName'] as String?,
+  credentialId: json['credentialId'] as String,
+  aaguid: json['aaguid'] as String?,
+  userDisplayName: json['userDisplayName'] as String?,
+  userVerificationRequired: json['userVerificationRequired'] as bool? ?? true,
+);
+
+Map<String, dynamic> _$$PasskeyMetadataImplToJson(
+  _$PasskeyMetadataImpl instance,
+) => <String, dynamic>{
+  'rpId': instance.rpId,
+  'rpName': instance.rpName,
+  'credentialId': instance.credentialId,
+  'aaguid': instance.aaguid,
+  'userDisplayName': instance.userDisplayName,
+  'userVerificationRequired': instance.userVerificationRequired,
+};
+
 _$CredentialImpl _$$CredentialImplFromJson(Map<String, dynamic> json) =>
     _$CredentialImpl(
       id: json['id'] as String,
@@ -35,9 +57,15 @@ _$CredentialImpl _$$CredentialImplFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       categoryId: json['categoryId'] as String?,
+      folderId: json['folderId'] as String?,
       isFavorite: json['isFavorite'] as bool? ?? false,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      passkeyMetadata: json['passkeyMetadata'] == null
+          ? null
+          : PasskeyMetadata.fromJson(
+              json['passkeyMetadata'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$$CredentialImplToJson(_$CredentialImpl instance) =>
@@ -51,9 +79,11 @@ Map<String, dynamic> _$$CredentialImplToJson(_$CredentialImpl instance) =>
       'notes': instance.notes,
       'customFields': instance.customFields,
       'categoryId': instance.categoryId,
+      'folderId': instance.folderId,
       'isFavorite': instance.isFavorite,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'passkeyMetadata': instance.passkeyMetadata,
     };
 
 const _$CredentialTypeEnumMap = {
@@ -61,4 +91,5 @@ const _$CredentialTypeEnumMap = {
   CredentialType.apiKey: 'apiKey',
   CredentialType.secureNote: 'secureNote',
   CredentialType.totp: 'totp',
+  CredentialType.passkey: 'passkey',
 };

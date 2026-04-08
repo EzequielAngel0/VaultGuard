@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../app/di/injection.dart';
 import '../../../core/services/recovery_service.dart';
@@ -50,12 +49,14 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
       unlocked: (_) async {
         final code = await getIt<RecoveryService>().generateRecoveryCode();
         if (!mounted) return;
+        // SEC: Pasamos el targetRoute como String y dejamos que RecoveryCodeDisplay
+        // use su propio context para navegar, evitando el bug de context desmontado.
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (_) => RecoveryCodeDisplay(
               code: code,
-              onDone: () => context.go(AppRoutes.home),
+              targetRoute: AppRoutes.home,
             ),
           ),
         );
@@ -109,10 +110,10 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
                         ),
                       ],
                     ),
-                    child: const Icon(
-                      Icons.lock_outline_rounded,
-                      color: Colors.white,
-                      size: 36,
+                    child: Image.asset(
+                      'assets/logo/SoloKey.png',
+                      height: 56,
+                      width: 56,
                     ),
                   ),
                 ),

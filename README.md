@@ -1,6 +1,6 @@
-# 🛡️ VaultGuard
+# 🛡️ SoloKey
 
-**VaultGuard** es un gestor de contraseñas *Local-First* para Android construido en **Flutter**. Diseñado desde cero bajo estrictos estándares de seguridad y con una arquitectura limpia (Clean Architecture), asegura que tus secretos —desde contraseñas y tarjetas hasta códigos TOTP— nunca salgan de tu dispositivo y estén cifrados con grado militar.
+**SoloKey** es un gestor de contraseñas *Local-First* para Android construido en **Flutter**. Diseñado desde cero bajo estrictos estándares de seguridad y con una arquitectura limpia (Clean Architecture), asegura que tus secretos —desde contraseñas y tarjetas hasta códigos TOTP— nunca salgan de tu dispositivo y estén cifrados con grado militar.
 
 ---
 
@@ -28,7 +28,7 @@ El proyecto fue guiado bajo un estricto principio de **Separación de Responsabi
 
 ## 🔒 Postura Criptográfica
 
-VaultGuard adopta una postura "Zero-Trust" en el disco, utilizando implementaciones nativas donde es posible:
+SoloKey adopta una postura "Zero-Trust" en el disco, utilizando implementaciones nativas donde es posible:
 - **Derivación de Clave (KDF):** Usa **Argon2id** adaptado al procesador.
 - **Cifrado Simétrico:** Utiliza **AES-256-GCM**, un algoritmo autenticado (AEAD) asegurando confidencialidad e integridad del payload.
 - **Protección de Llaves:** Almacena la *Master Key* Derivada y la Sal temporalmente en RAM de forma oscurecida y confía en el `Android KeyStore` nativo (`flutter_secure_storage`) para persistir llaves criptográficas subyacentes críticas o parámetros locales limitados.
@@ -42,7 +42,7 @@ VaultGuard adopta una postura "Zero-Trust" en el disco, utilizando implementacio
 - Entorno de desarrollo Android configurado (Android Studio o CLI)
 
 ### Generación de archivos (Obligatorio)
-Dado que VaultGuard usa inyección y modelos inmutables generados (`freezed`, `drift`, `riverpod`), debes correr el `build_runner` tras la primera descarga y antes de compilar:
+Dado que SoloKey usa inyección y modelos inmutables generados (`freezed`, `drift`, `riverpod`), debes correr el `build_runner` tras la primera descarga y antes de compilar:
 
 ```bash
 flutter pub get

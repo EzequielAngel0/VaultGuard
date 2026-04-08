@@ -45,7 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: VaultAppBar(
-        title: 'VaultGuard',
+        title: 'SoloKey',
         actions: [
           IconButton(
             icon: const Icon(Icons.lock_rounded, color: Color(0xFFCF6679)),
@@ -497,7 +497,12 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.shield_outlined, size: 72, color: Color(0xFF2A2A4A)),
+          Image.asset(
+            'assets/logo/SoloKey.png',
+            height: 72,
+            width: 72,
+            color: const Color(0xFF2A2A4A),
+          ),
           const SizedBox(height: 20),
           Text(message, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),

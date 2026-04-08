@@ -276,10 +276,10 @@ class RecoveryCodeDisplay extends StatelessWidget {
   const RecoveryCodeDisplay({
     super.key,
     required this.code,
-    required this.onDone,
+    required this.targetRoute,
   });
   final String code;
-  final VoidCallback onDone;
+  final String targetRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -356,7 +356,7 @@ class RecoveryCodeDisplay extends StatelessWidget {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: onDone,
+              onPressed: () => context.go(targetRoute),
               child: const Text('Ya lo guardé, continuar'),
             ),
           ],

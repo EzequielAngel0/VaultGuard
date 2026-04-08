@@ -5,7 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../features/credentials/presentation/credential_detail_screen.dart';
 import '../features/credentials/presentation/credential_form_screen.dart';
 import '../features/credentials/presentation/home_screen.dart';
+import '../features/credentials/presentation/password_history_screen.dart';
 import '../features/credentials/presentation/security_audit_screen.dart';
+import '../features/passkeys/presentation/passkeys_screen.dart';
+import '../features/settings/presentation/autofill_onboarding_screen.dart';
+import '../features/vault_transfer/presentation/transfer_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/vault_access/application/vault_state_provider.dart';
 import '../features/vault_access/presentation/recovery_screen.dart';
@@ -24,12 +28,16 @@ abstract final class AppRoutes {
   static const recovery         = '/recovery';
   static const home             = '/home';
   static const credentialDetail = '/credentials/:id';
+  static const passwordHistory  = '/credentials/:id/history';
   static const credentialEdit   = '/credentials/:id/edit';
   static const credentialCreate = '/credentials/create';
   static const folderDetail     = '/folders/:id';
   static const settings         = '/settings';
-  static const securityAudit   = '/security-audit';
-  static const qrScanner        = '/qr-scanner';
+  static const securityAudit      = '/security-audit';
+  static const qrScanner           = '/qr-scanner';
+  static const transfer            = '/transfer';
+  static const autofillOnboarding  = '/autofill-onboarding';
+  static const passkeys            = '/passkeys';
 }
 
 // ── RouterNotifier ────────────────────────────────────────────────────────────
@@ -70,7 +78,9 @@ class _RouterNotifier extends ChangeNotifier {
         loc.startsWith('/password') ||
         loc.startsWith('/settings') ||
         loc.startsWith('/security-audit') ||
-        loc.startsWith('/qr-scanner');
+        loc.startsWith('/qr-scanner') ||
+        loc.startsWith('/transfer') ||
+        loc.startsWith('/autofill-onboarding');
 
     // Redirect to unlock if trying to access protected routes while locked
     if (onProtected && !isUnlocked) return AppRoutes.unlock;
@@ -123,6 +133,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: AppRoutes.passwordHistory,
+        builder: (context, state) => PasswordHistoryScreen(
+          credentialId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.credentialEdit,
         builder: (_, state) => CredentialFormScreen(
           existingId: state.pathParameters['id'],
@@ -149,6 +165,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.qrScanner,
         builder: (_, _) => const QrScannerScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.transfer,
+        builder: (_, _) => const TransferScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.autofillOnboarding,
+        builder: (_, _) => const AutofillOnboardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.passkeys,
+        builder: (_, _) => const PasskeysScreen(),
       ),
     ],
   );

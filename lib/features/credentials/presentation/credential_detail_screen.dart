@@ -10,6 +10,7 @@ import '../../../shared/widgets/copy_feedback_button.dart';
 import '../../../shared/widgets/vault_app_bar.dart';
 import '../application/credentials_provider.dart';
 import '../domain/entities/credential.dart';
+import '../../../core/utils/auth_helper.dart';
 
 class CredentialDetailScreen extends ConsumerWidget {
   const CredentialDetailScreen({super.key, required this.credentialId});
@@ -120,6 +121,20 @@ class _DetailView extends ConsumerWidget {
           if (credential.type == CredentialType.totp &&
               credential.password != null)
             _TotpTile(secretId: credential.password!),
+          const SizedBox(height: 16),
+          Center(
+            child: TextButton.icon(
+              onPressed: () => context.push(
+                AppRoutes.passwordHistory.replaceAll(':id', credential.id),
+              ),
+              icon: const Icon(Icons.history_rounded, size: 18),
+              label: const Text('Ver historial de contraseñas'),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF6C63FF),
+                textStyle: const TextStyle(fontSize: 13),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -150,6 +165,10 @@ class _DetailView extends ConsumerWidget {
       ),
     );
     if (confirmed == true) {
+      if (!context.mounted) return;
+      final auth = await AuthHelper.requireAuth(context, reason: 'Verifica para eliminar esta credencial');
+      if (!auth) return;
+
       await ref
           .read(credentialsNotifierProvider.notifier)
           .delete(credential.id);
@@ -220,6 +239,11 @@ class _SecretTileState extends State<_SecretTile> {
   bool _revealed = false;
 
   Future<void> _copy(BuildContext context) async {
+    if (widget.isSecret) {
+      final auth = await AuthHelper.requireAuth(context);
+      if (!auth) return;
+    }
+
     final seconds =
         await getIt<ClipboardService>().copySecure(widget.value);
     if (context.mounted) {
@@ -289,7 +313,13 @@ class _SecretTileState extends State<_SecretTile> {
                 color: const Color(0xFF9E9EBF),
                 size: 18,
               ),
-              onPressed: () => setState(() => _revealed = !_revealed),
+              onPressed: () async {
+                if (!_revealed) {
+                  final auth = await AuthHelper.requireAuth(context);
+                  if (!auth) return;
+                }
+                setState(() => _revealed = !_revealed);
+              },
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
@@ -365,6 +395,9 @@ class _TotpTileState extends State<_TotpTile> {
   Future<void> _copy(BuildContext context) async {
     if (_code == 'Invalido' || _code == '--- ---') return;
     
+    final auth = await AuthHelper.requireAuth(context);
+    if (!auth) return;
+
     final cleanCode = _code.replaceAll(' ', '');
     final seconds = await getIt<ClipboardService>().copySecure(cleanCode);
     if (context.mounted) {

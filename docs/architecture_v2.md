@@ -1,4 +1,4 @@
-# VaultGuard - Actualización Arquitectónica de Interfaz y Datos (v2)
+# SoloKey - Actualización Arquitectónica de Interfaz y Datos (v2)
 
 Registro de decisiones arquitectónicas referentes a las estructuras de organización y flujos UI, correspondientes a los cambios realizados en Marzo de 2026.
 

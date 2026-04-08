@@ -1,6 +1,6 @@
-# Posibles Mejoras y Futuras Características (VaultGuard)
+# Posibles Mejoras y Futuras Características (SoloKey)
 
-Este documento contiene un conjunto de ideas, expansiones funcionales y mecánicas avanzadas sugeridas para iteraciones futuras en el desarrollo de la aplicación. Representan adiciones lógicas que potenciarían a VaultGuard para competir contra soluciones comerciales modernas.
+Este documento contiene un conjunto de ideas, expansiones funcionales y mecánicas avanzadas sugeridas para iteraciones futuras en el desarrollo de la aplicación. Representan adiciones lógicas que potenciarían a SoloKey para competir contra soluciones comerciales modernas.
 
 ## 🔐 1. Seguridad Avanzada y Biometría Estricta
 
@@ -13,12 +13,12 @@ Este documento contiene un conjunto de ideas, expansiones funcionales y mecánic
 
 *   **Exportación/Importación Segura Binaria:** Capacidad de empacar la base de datos completa de SQLite en un archivo cifrado propio (ej. `.vgvault`) con una contraseña desechable (distinta a la maestra) para poder transportarla entre dispositivos locales sin nubes.
 *   **Exportación a Formatos Abiertos (CSV/JSON):** Permitir volcar los datos a CSV plano (con advertencia de extrema sensibilidad) para compatibilidad con migración a otros gestores comunes (Bitwarden, 1Password, etc.).
-*   **Sincronización P2P / WiFi Local:** Mantener VaultGuard como "Local-First" sincronizando bóvedas directamente por WiFi o Bluetooth entre el teléfono del usuario y su PC, sin pasar por servidores en la nube.
+*   **Sincronización P2P / WiFi Local:** Mantener SoloKey como "Local-First" sincronizando bóvedas directamente por WiFi o Bluetooth entre el teléfono del usuario y su PC, sin pasar por servidores en la nube.
 
 ## 🌐 3. Integración con el Sistema Operativo
 
 *   **Servicio de Autocompletado del SO (Autofill API):**
-    *   **Android:** Integración con *AutofillService* para que VaultGuard sugiera credenciales automáticamente cuando el usuario abra una app como Twitter o Netflix, o un formulario en el navegador web Chrome.
+    *   **Android:** Integración con *AutofillService* para que SoloKey sugiera credenciales automáticamente cuando el usuario abra una app como Twitter o Netflix, o un formulario en el navegador web Chrome.
     *   **iOS:** Extensión de *AutoFill Credential Provider* para la misma funcionalidad en Safari o apps.
 *   **Integración con Accesos Directos (Quick Settings / Tiles):** Botón nativo en la barra de ajustes de Android para bloquear inmediatamente la bóveda sin entrar a la aplicación.
 *   **Widgets Nativos de Pantalla de Inicio:** Widget opaco que al pulsarlo pida huella e inicie inmediatamente en "Crear Credencial" o un contador interactivo para los TOTPs favoritos sin abrir de lleno la aplicación principal.

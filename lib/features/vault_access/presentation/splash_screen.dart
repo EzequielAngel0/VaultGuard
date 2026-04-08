@@ -76,15 +76,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.shield_rounded,
-                    color: Colors.white,
-                    size: 48,
+                  child: Image.asset(
+                    'assets/logo/SoloKey.png',
+                    height: 100,
+                    width: 100,
                   ),
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'VaultGuard',
+                  'SoloKey',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,

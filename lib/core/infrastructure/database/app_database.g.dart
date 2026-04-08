@@ -47,6 +47,17 @@ class $CredentialEntriesTable extends CredentialEntries
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _folderIdMeta = const VerificationMeta(
+    'folderId',
+  );
+  @override
+  late final GeneratedColumn<String> folderId = GeneratedColumn<String>(
+    'folder_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
     'isFavorite',
   );
@@ -102,6 +113,7 @@ class $CredentialEntriesTable extends CredentialEntries
     title,
     type,
     categoryId,
+    folderId,
     isFavorite,
     encryptedPayload,
     createdAt,
@@ -144,6 +156,12 @@ class $CredentialEntriesTable extends CredentialEntries
       context.handle(
         _categoryIdMeta,
         categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    }
+    if (data.containsKey('folder_id')) {
+      context.handle(
+        _folderIdMeta,
+        folderId.isAcceptableOrUnknown(data['folder_id']!, _folderIdMeta),
       );
     }
     if (data.containsKey('is_favorite')) {
@@ -204,6 +222,10 @@ class $CredentialEntriesTable extends CredentialEntries
         DriftSqlType.string,
         data['${effectivePrefix}category_id'],
       ),
+      folderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}folder_id'],
+      ),
       isFavorite: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_favorite'],
@@ -236,17 +258,20 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
   /// Human-readable title — not considered a secret (shown in vault list).
   final String title;
 
-  /// Credential type enum string (password, apiKey, secureNote, cryptoWallet).
+  /// Credential type enum string (password, apiKey, secureNote, totp, passkey).
   final String type;
 
   /// Optional category ID — unencrypted for filtering.
   final String? categoryId;
 
+  /// Optional folder ID — unencrypted for tree navigation.
+  final String? folderId;
+
   /// Favourite flag — unencrypted for quick access.
   final bool isFavorite;
 
   /// AES-256-GCM blob: nonce(12) || ciphertext || tag(16).
-  /// Contains JSON-encoded sensitive payload.
+  /// Contains JSON-encoded sensitive payload including passkeyMetadata.
   final Uint8List encryptedPayload;
 
   /// Unix timestamp in milliseconds.
@@ -259,6 +284,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
     required this.title,
     required this.type,
     this.categoryId,
+    this.folderId,
     required this.isFavorite,
     required this.encryptedPayload,
     required this.createdAt,
@@ -272,6 +298,9 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
     map['type'] = Variable<String>(type);
     if (!nullToAbsent || categoryId != null) {
       map['category_id'] = Variable<String>(categoryId);
+    }
+    if (!nullToAbsent || folderId != null) {
+      map['folder_id'] = Variable<String>(folderId);
     }
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['encrypted_payload'] = Variable<Uint8List>(encryptedPayload);
@@ -288,6 +317,9 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
       categoryId: categoryId == null && nullToAbsent
           ? const Value.absent()
           : Value(categoryId),
+      folderId: folderId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(folderId),
       isFavorite: Value(isFavorite),
       encryptedPayload: Value(encryptedPayload),
       createdAt: Value(createdAt),
@@ -305,6 +337,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
       title: serializer.fromJson<String>(json['title']),
       type: serializer.fromJson<String>(json['type']),
       categoryId: serializer.fromJson<String?>(json['categoryId']),
+      folderId: serializer.fromJson<String?>(json['folderId']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       encryptedPayload: serializer.fromJson<Uint8List>(
         json['encryptedPayload'],
@@ -321,6 +354,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
       'title': serializer.toJson<String>(title),
       'type': serializer.toJson<String>(type),
       'categoryId': serializer.toJson<String?>(categoryId),
+      'folderId': serializer.toJson<String?>(folderId),
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'encryptedPayload': serializer.toJson<Uint8List>(encryptedPayload),
       'createdAt': serializer.toJson<int>(createdAt),
@@ -333,6 +367,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
     String? title,
     String? type,
     Value<String?> categoryId = const Value.absent(),
+    Value<String?> folderId = const Value.absent(),
     bool? isFavorite,
     Uint8List? encryptedPayload,
     int? createdAt,
@@ -342,6 +377,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
     title: title ?? this.title,
     type: type ?? this.type,
     categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    folderId: folderId.present ? folderId.value : this.folderId,
     isFavorite: isFavorite ?? this.isFavorite,
     encryptedPayload: encryptedPayload ?? this.encryptedPayload,
     createdAt: createdAt ?? this.createdAt,
@@ -355,6 +391,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
       categoryId: data.categoryId.present
           ? data.categoryId.value
           : this.categoryId,
+      folderId: data.folderId.present ? data.folderId.value : this.folderId,
       isFavorite: data.isFavorite.present
           ? data.isFavorite.value
           : this.isFavorite,
@@ -373,6 +410,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
           ..write('title: $title, ')
           ..write('type: $type, ')
           ..write('categoryId: $categoryId, ')
+          ..write('folderId: $folderId, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('encryptedPayload: $encryptedPayload, ')
           ..write('createdAt: $createdAt, ')
@@ -387,6 +425,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
     title,
     type,
     categoryId,
+    folderId,
     isFavorite,
     $driftBlobEquality.hash(encryptedPayload),
     createdAt,
@@ -400,6 +439,7 @@ class CredentialEntry extends DataClass implements Insertable<CredentialEntry> {
           other.title == this.title &&
           other.type == this.type &&
           other.categoryId == this.categoryId &&
+          other.folderId == this.folderId &&
           other.isFavorite == this.isFavorite &&
           $driftBlobEquality.equals(
             other.encryptedPayload,
@@ -414,6 +454,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
   final Value<String> title;
   final Value<String> type;
   final Value<String?> categoryId;
+  final Value<String?> folderId;
   final Value<bool> isFavorite;
   final Value<Uint8List> encryptedPayload;
   final Value<int> createdAt;
@@ -424,6 +465,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
     this.title = const Value.absent(),
     this.type = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.folderId = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.encryptedPayload = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -435,6 +477,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
     required String title,
     required String type,
     this.categoryId = const Value.absent(),
+    this.folderId = const Value.absent(),
     this.isFavorite = const Value.absent(),
     required Uint8List encryptedPayload,
     required int createdAt,
@@ -451,6 +494,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
     Expression<String>? title,
     Expression<String>? type,
     Expression<String>? categoryId,
+    Expression<String>? folderId,
     Expression<bool>? isFavorite,
     Expression<Uint8List>? encryptedPayload,
     Expression<int>? createdAt,
@@ -462,6 +506,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
       if (title != null) 'title': title,
       if (type != null) 'type': type,
       if (categoryId != null) 'category_id': categoryId,
+      if (folderId != null) 'folder_id': folderId,
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (encryptedPayload != null) 'encrypted_payload': encryptedPayload,
       if (createdAt != null) 'created_at': createdAt,
@@ -475,6 +520,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
     Value<String>? title,
     Value<String>? type,
     Value<String?>? categoryId,
+    Value<String?>? folderId,
     Value<bool>? isFavorite,
     Value<Uint8List>? encryptedPayload,
     Value<int>? createdAt,
@@ -486,6 +532,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
       title: title ?? this.title,
       type: type ?? this.type,
       categoryId: categoryId ?? this.categoryId,
+      folderId: folderId ?? this.folderId,
       isFavorite: isFavorite ?? this.isFavorite,
       encryptedPayload: encryptedPayload ?? this.encryptedPayload,
       createdAt: createdAt ?? this.createdAt,
@@ -508,6 +555,9 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
     }
     if (categoryId.present) {
       map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (folderId.present) {
+      map['folder_id'] = Variable<String>(folderId.value);
     }
     if (isFavorite.present) {
       map['is_favorite'] = Variable<bool>(isFavorite.value);
@@ -534,6 +584,7 @@ class CredentialEntriesCompanion extends UpdateCompanion<CredentialEntry> {
           ..write('title: $title, ')
           ..write('type: $type, ')
           ..write('categoryId: $categoryId, ')
+          ..write('folderId: $folderId, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('encryptedPayload: $encryptedPayload, ')
           ..write('createdAt: $createdAt, ')
@@ -1680,6 +1731,7 @@ typedef $$CredentialEntriesTableCreateCompanionBuilder =
       required String title,
       required String type,
       Value<String?> categoryId,
+      Value<String?> folderId,
       Value<bool> isFavorite,
       required Uint8List encryptedPayload,
       required int createdAt,
@@ -1692,6 +1744,7 @@ typedef $$CredentialEntriesTableUpdateCompanionBuilder =
       Value<String> title,
       Value<String> type,
       Value<String?> categoryId,
+      Value<String?> folderId,
       Value<bool> isFavorite,
       Value<Uint8List> encryptedPayload,
       Value<int> createdAt,
@@ -1725,6 +1778,11 @@ class $$CredentialEntriesTableFilterComposer
 
   ColumnFilters<String> get categoryId => $composableBuilder(
     column: $table.categoryId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get folderId => $composableBuilder(
+    column: $table.folderId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1778,6 +1836,11 @@ class $$CredentialEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get folderId => $composableBuilder(
+    column: $table.folderId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
     builder: (column) => ColumnOrderings(column),
@@ -1821,6 +1884,9 @@ class $$CredentialEntriesTableAnnotationComposer
     column: $table.categoryId,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get folderId =>
+      $composableBuilder(column: $table.folderId, builder: (column) => column);
 
   GeneratedColumn<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
@@ -1883,6 +1949,7 @@ class $$CredentialEntriesTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<String?> categoryId = const Value.absent(),
+                Value<String?> folderId = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<Uint8List> encryptedPayload = const Value.absent(),
                 Value<int> createdAt = const Value.absent(),
@@ -1893,6 +1960,7 @@ class $$CredentialEntriesTableTableManager
                 title: title,
                 type: type,
                 categoryId: categoryId,
+                folderId: folderId,
                 isFavorite: isFavorite,
                 encryptedPayload: encryptedPayload,
                 createdAt: createdAt,
@@ -1905,6 +1973,7 @@ class $$CredentialEntriesTableTableManager
                 required String title,
                 required String type,
                 Value<String?> categoryId = const Value.absent(),
+                Value<String?> folderId = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 required Uint8List encryptedPayload,
                 required int createdAt,
@@ -1915,6 +1984,7 @@ class $$CredentialEntriesTableTableManager
                 title: title,
                 type: type,
                 categoryId: categoryId,
+                folderId: folderId,
                 isFavorite: isFavorite,
                 encryptedPayload: encryptedPayload,
                 createdAt: createdAt,

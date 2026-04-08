@@ -8,7 +8,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 // ── Verification constant ─────────────────────────────────────────────────────
-const _kVerificationPlaintext = 'VaultGuard::v1::verify';
+const _kVerificationPlaintext = 'SoloKey::v1::verify';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Message models (must be sendable across isolate boundary — simple data only)

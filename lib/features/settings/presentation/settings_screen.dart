@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../app/di/injection.dart';
 import '../../../core/infrastructure/security/app_lifecycle_observer.dart';
 import '../../../core/infrastructure/security/session_manager.dart';
+import '../../../router/app_router.dart';
 import '../../../shared/widgets/vault_app_bar.dart';
 import '../../vault_access/application/vault_state_provider.dart';
 import '../domain/entities/app_security_settings.dart';
@@ -161,6 +163,8 @@ class _SettingsBody extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 32),
+        _DataManagementSection(),
         const SizedBox(height: 32),
         _DangerZone(),
       ],
@@ -334,6 +338,98 @@ class _Divider extends StatelessWidget {
       indent: 48,
       endIndent: 16,
       color: Color(0xFF2A2A4A),
+    );
+  }
+}
+
+// ── Data management section ───────────────────────────────────────────────────
+
+class _DataManagementSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeader(label: 'Gestión de datos'),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF16213E),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(
+                  Icons.sync_alt_rounded,
+                  color: Color(0xFF6C63FF),
+                ),
+                title: const Text(
+                  'Exportar / Importar',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                subtitle: const Text(
+                  'Haz backups cifrados de tu bóveda',
+                  style: TextStyle(color: Color(0xFF9E9EBF), fontSize: 12),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Color(0xFF5C5C7A),
+                ),
+                onTap: () => context.push(AppRoutes.transfer),
+              ),
+              const Divider(
+                height: 1,
+                indent: 56,
+                color: Color(0xFF2A2A4A),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.auto_fix_high_rounded,
+                  color: Color(0xFF6C63FF),
+                ),
+                title: const Text(
+                  'Autocompletado del sistema',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                subtitle: const Text(
+                  'Completa contraseñas en otras apps',
+                  style: TextStyle(color: Color(0xFF9E9EBF), fontSize: 12),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Color(0xFF5C5C7A),
+                ),
+                onTap: () => context.push(AppRoutes.autofillOnboarding),
+              ),
+              const Divider(
+                height: 1,
+                indent: 56,
+                color: Color(0xFF2A2A4A),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.fingerprint_rounded,
+                  color: Color(0xFF4CAF50),
+                ),
+                title: const Text(
+                  'Passkeys',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                subtitle: const Text(
+                  'Gestiona tus llaves FIDO2 / WebAuthn',
+                  style: TextStyle(color: Color(0xFF9E9EBF), fontSize: 12),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Color(0xFF5C5C7A),
+                ),
+                onTap: () => context.push(AppRoutes.passkeys),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -2,13 +2,17 @@ import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
 
+import 'package:uuid/uuid.dart';
+
 import '../../../core/infrastructure/database/app_database.dart';
 import '../../../core/infrastructure/database/daos/category_dao.dart';
 import '../../../core/infrastructure/database/daos/credential_dao.dart';
+import '../../../core/infrastructure/database/daos/password_history_dao.dart';
 import '../../../core/infrastructure/security/i_security_service.dart';
 import '../../../core/infrastructure/security/session_manager.dart';
 import '../domain/entities/category.dart';
 import '../domain/entities/credential.dart';
+import '../domain/entities/password_history.dart';
 import '../domain/repositories/i_credential_repository.dart';
 import 'credential_dto.dart';
 
@@ -16,11 +20,13 @@ import 'credential_dto.dart';
 class CredentialRepositoryImpl implements ICredentialRepository {
   const CredentialRepositoryImpl(
     this._credentialDao,
+    this._historyDao,
     this._securityService,
     this._sessionManager,
   );
 
   final CredentialDao _credentialDao;
+  final PasswordHistoryDao _historyDao;
   final ISecurityService _securityService;
   final SessionManager _sessionManager;
 
@@ -64,6 +70,15 @@ class CredentialRepositoryImpl implements ICredentialRepository {
         encryptedPayload: encrypted,
       ),
     );
+    await _historyDao.insert(
+      PasswordHistoryEntriesCompanion.insert(
+        id: const Uuid().v4(),
+        credentialId: credential.id,
+        encryptedPayload: encrypted,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+      ),
+    );
+    await _historyDao.pruneOld(credential.id, keep: 10);
   }
 
   @override
@@ -88,6 +103,27 @@ class CredentialRepositoryImpl implements ICredentialRepository {
   Future<List<Credential>> search(String query) async {
     final entries = await _credentialDao.searchByTitle(query);
     return Future.wait(entries.map(_decryptEntry));
+  }
+
+  @override
+  Future<List<PasswordHistory>> getPasswordHistory(String credentialId) async {
+    final entries = await _historyDao.getByCredential(credentialId);
+    final key = _keyBytes;
+    
+    final history = <PasswordHistory>[];
+    for (final e in entries) {
+      final plainBytes = await _securityService.decrypt(
+        Uint8List.fromList(e.encryptedPayload),
+        key,
+      );
+      final payload = CredentialSensitivePayload.fromBytes(plainBytes);
+      history.add(PasswordHistory(
+        id: e.id,
+        password: payload.password ?? '',
+        createdAt: DateTime.fromMillisecondsSinceEpoch(e.createdAt),
+      ));
+    }
+    return history;
   }
 }
 

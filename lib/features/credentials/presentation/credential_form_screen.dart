@@ -155,6 +155,11 @@ class _CredentialFormScreenState extends ConsumerState<CredentialFormScreen> {
           createdAt: _existing?.createdAt ?? now,
           updatedAt: now,
         );
+
+      // Passkeys are registered via the platform FIDO2 API, not via this form.
+      // Existing passkey credentials are read-only here.
+      case CredentialType.passkey:
+        return _existing!.copyWith(updatedAt: now);
     }
   }
 
@@ -525,6 +530,33 @@ class _CredentialFormScreenState extends ConsumerState<CredentialFormScreen> {
                 ),
               ],
             ),
+
+          // Passkeys are platform-managed via FIDO2 — show read-only info
+          CredentialType.passkey => Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF4CAF50).withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                ),
+              ),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.fingerprint_rounded, color: Color(0xFF4CAF50), size: 20),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Las Passkeys se registran directamente con la plataforma '
+                      'FIDO2 del dispositivo. Usa la pantalla de Passkeys en '
+                      'Ajustes para registrar o gestionar tus passkeys.',
+                      style: TextStyle(color: Color(0xFF4CAF50), fontSize: 12, height: 1.5),
+                    ),
+                  ),
+                ],
+              ),
+            ),
         },
       ),
     );
@@ -668,6 +700,7 @@ class _TypeSelector extends StatelessWidget {
     (type: CredentialType.apiKey,     label: 'API Key',    icon: Icons.key_rounded),
     (type: CredentialType.secureNote, label: 'Nota',       icon: Icons.note_rounded),
     (type: CredentialType.totp,       label: 'TOTP 2FA',   icon: Icons.access_time_rounded),
+    (type: CredentialType.passkey,    label: 'Passkey',    icon: Icons.fingerprint_rounded),
   ];
 
   @override
@@ -680,6 +713,7 @@ class _TypeSelector extends StatelessWidget {
           CredentialType.apiKey     => const Color(0xFF03DAC6),
           CredentialType.secureNote => const Color(0xFFFFB74D),
           CredentialType.totp       => const Color(0xFFE91E8C),
+          CredentialType.passkey    => const Color(0xFF4CAF50),
         };
         return Expanded(
           child: GestureDetector(

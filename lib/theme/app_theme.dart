@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppTheme {
-  static const _primaryColor = Color(0xFF6C63FF);
-  static const _surfaceColor = Color(0xFF1A1A2E);
-  static const _cardColor = Color(0xFF16213E);
-  static const _backgroundColor = Color(0xFF0F0F23);
-  static const _errorColor = Color(0xFFCF6679);
+  static const _primaryColor = Color(0xFF39FF14); // Neon Green or Cyan, let's use Electric Cyan / Lime
+  static const _surfaceColor = Color(0xFF1E1E2C);
+  static const _cardColor = Color(0xFF161622);
+  static const _backgroundColor = Color(0xFF0F0F16);
+  static const _errorColor = Color(0xFFFF3366);
 
   static ThemeData dark() {
     return ThemeData(

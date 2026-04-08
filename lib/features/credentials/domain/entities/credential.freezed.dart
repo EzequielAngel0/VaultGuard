@@ -213,6 +213,320 @@ abstract class _CustomField implements CustomField {
       throw _privateConstructorUsedError;
 }
 
+PasskeyMetadata _$PasskeyMetadataFromJson(Map<String, dynamic> json) {
+  return _PasskeyMetadata.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PasskeyMetadata {
+  /// Relying Party identifier, e.g. "example.com"
+  String get rpId => throw _privateConstructorUsedError;
+
+  /// Relying Party display name, e.g. "Example Inc."
+  String? get rpName => throw _privateConstructorUsedError;
+
+  /// Base64url-encoded credential ID (the public identifier).
+  String get credentialId => throw _privateConstructorUsedError;
+
+  /// AAGUID of the authenticator (identifies the passkey provider).
+  String? get aaguid => throw _privateConstructorUsedError;
+
+  /// Username / display name used at registration time.
+  String? get userDisplayName => throw _privateConstructorUsedError;
+
+  /// Whether the passkey requires user verification (biometric/PIN).
+  bool get userVerificationRequired => throw _privateConstructorUsedError;
+
+  /// Serializes this PasskeyMetadata to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PasskeyMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PasskeyMetadataCopyWith<PasskeyMetadata> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PasskeyMetadataCopyWith<$Res> {
+  factory $PasskeyMetadataCopyWith(
+    PasskeyMetadata value,
+    $Res Function(PasskeyMetadata) then,
+  ) = _$PasskeyMetadataCopyWithImpl<$Res, PasskeyMetadata>;
+  @useResult
+  $Res call({
+    String rpId,
+    String? rpName,
+    String credentialId,
+    String? aaguid,
+    String? userDisplayName,
+    bool userVerificationRequired,
+  });
+}
+
+/// @nodoc
+class _$PasskeyMetadataCopyWithImpl<$Res, $Val extends PasskeyMetadata>
+    implements $PasskeyMetadataCopyWith<$Res> {
+  _$PasskeyMetadataCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PasskeyMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rpId = null,
+    Object? rpName = freezed,
+    Object? credentialId = null,
+    Object? aaguid = freezed,
+    Object? userDisplayName = freezed,
+    Object? userVerificationRequired = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            rpId: null == rpId
+                ? _value.rpId
+                : rpId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            rpName: freezed == rpName
+                ? _value.rpName
+                : rpName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            credentialId: null == credentialId
+                ? _value.credentialId
+                : credentialId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            aaguid: freezed == aaguid
+                ? _value.aaguid
+                : aaguid // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            userDisplayName: freezed == userDisplayName
+                ? _value.userDisplayName
+                : userDisplayName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            userVerificationRequired: null == userVerificationRequired
+                ? _value.userVerificationRequired
+                : userVerificationRequired // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PasskeyMetadataImplCopyWith<$Res>
+    implements $PasskeyMetadataCopyWith<$Res> {
+  factory _$$PasskeyMetadataImplCopyWith(
+    _$PasskeyMetadataImpl value,
+    $Res Function(_$PasskeyMetadataImpl) then,
+  ) = __$$PasskeyMetadataImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String rpId,
+    String? rpName,
+    String credentialId,
+    String? aaguid,
+    String? userDisplayName,
+    bool userVerificationRequired,
+  });
+}
+
+/// @nodoc
+class __$$PasskeyMetadataImplCopyWithImpl<$Res>
+    extends _$PasskeyMetadataCopyWithImpl<$Res, _$PasskeyMetadataImpl>
+    implements _$$PasskeyMetadataImplCopyWith<$Res> {
+  __$$PasskeyMetadataImplCopyWithImpl(
+    _$PasskeyMetadataImpl _value,
+    $Res Function(_$PasskeyMetadataImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PasskeyMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rpId = null,
+    Object? rpName = freezed,
+    Object? credentialId = null,
+    Object? aaguid = freezed,
+    Object? userDisplayName = freezed,
+    Object? userVerificationRequired = null,
+  }) {
+    return _then(
+      _$PasskeyMetadataImpl(
+        rpId: null == rpId
+            ? _value.rpId
+            : rpId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        rpName: freezed == rpName
+            ? _value.rpName
+            : rpName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        credentialId: null == credentialId
+            ? _value.credentialId
+            : credentialId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        aaguid: freezed == aaguid
+            ? _value.aaguid
+            : aaguid // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        userDisplayName: freezed == userDisplayName
+            ? _value.userDisplayName
+            : userDisplayName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        userVerificationRequired: null == userVerificationRequired
+            ? _value.userVerificationRequired
+            : userVerificationRequired // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PasskeyMetadataImpl implements _PasskeyMetadata {
+  const _$PasskeyMetadataImpl({
+    required this.rpId,
+    this.rpName,
+    required this.credentialId,
+    this.aaguid,
+    this.userDisplayName,
+    this.userVerificationRequired = true,
+  });
+
+  factory _$PasskeyMetadataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PasskeyMetadataImplFromJson(json);
+
+  /// Relying Party identifier, e.g. "example.com"
+  @override
+  final String rpId;
+
+  /// Relying Party display name, e.g. "Example Inc."
+  @override
+  final String? rpName;
+
+  /// Base64url-encoded credential ID (the public identifier).
+  @override
+  final String credentialId;
+
+  /// AAGUID of the authenticator (identifies the passkey provider).
+  @override
+  final String? aaguid;
+
+  /// Username / display name used at registration time.
+  @override
+  final String? userDisplayName;
+
+  /// Whether the passkey requires user verification (biometric/PIN).
+  @override
+  @JsonKey()
+  final bool userVerificationRequired;
+
+  @override
+  String toString() {
+    return 'PasskeyMetadata(rpId: $rpId, rpName: $rpName, credentialId: $credentialId, aaguid: $aaguid, userDisplayName: $userDisplayName, userVerificationRequired: $userVerificationRequired)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PasskeyMetadataImpl &&
+            (identical(other.rpId, rpId) || other.rpId == rpId) &&
+            (identical(other.rpName, rpName) || other.rpName == rpName) &&
+            (identical(other.credentialId, credentialId) ||
+                other.credentialId == credentialId) &&
+            (identical(other.aaguid, aaguid) || other.aaguid == aaguid) &&
+            (identical(other.userDisplayName, userDisplayName) ||
+                other.userDisplayName == userDisplayName) &&
+            (identical(
+                  other.userVerificationRequired,
+                  userVerificationRequired,
+                ) ||
+                other.userVerificationRequired == userVerificationRequired));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    rpId,
+    rpName,
+    credentialId,
+    aaguid,
+    userDisplayName,
+    userVerificationRequired,
+  );
+
+  /// Create a copy of PasskeyMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PasskeyMetadataImplCopyWith<_$PasskeyMetadataImpl> get copyWith =>
+      __$$PasskeyMetadataImplCopyWithImpl<_$PasskeyMetadataImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PasskeyMetadataImplToJson(this);
+  }
+}
+
+abstract class _PasskeyMetadata implements PasskeyMetadata {
+  const factory _PasskeyMetadata({
+    required final String rpId,
+    final String? rpName,
+    required final String credentialId,
+    final String? aaguid,
+    final String? userDisplayName,
+    final bool userVerificationRequired,
+  }) = _$PasskeyMetadataImpl;
+
+  factory _PasskeyMetadata.fromJson(Map<String, dynamic> json) =
+      _$PasskeyMetadataImpl.fromJson;
+
+  /// Relying Party identifier, e.g. "example.com"
+  @override
+  String get rpId;
+
+  /// Relying Party display name, e.g. "Example Inc."
+  @override
+  String? get rpName;
+
+  /// Base64url-encoded credential ID (the public identifier).
+  @override
+  String get credentialId;
+
+  /// AAGUID of the authenticator (identifies the passkey provider).
+  @override
+  String? get aaguid;
+
+  /// Username / display name used at registration time.
+  @override
+  String? get userDisplayName;
+
+  /// Whether the passkey requires user verification (biometric/PIN).
+  @override
+  bool get userVerificationRequired;
+
+  /// Create a copy of PasskeyMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PasskeyMetadataImplCopyWith<_$PasskeyMetadataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 Credential _$CredentialFromJson(Map<String, dynamic> json) {
   return _Credential.fromJson(json);
 }
@@ -224,14 +538,18 @@ mixin _$Credential {
   String get title => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
   String? get password =>
-      throw _privateConstructorUsedError; // stored encrypted
+      throw _privateConstructorUsedError; // stored encrypted; holds passkey private key handle too
   String? get website => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError; // stored encrypted
   List<CustomField> get customFields => throw _privateConstructorUsedError;
   String? get categoryId => throw _privateConstructorUsedError;
+  String? get folderId => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
+
+  /// Present only when [type] == [CredentialType.passkey]
+  PasskeyMetadata? get passkeyMetadata => throw _privateConstructorUsedError;
 
   /// Serializes this Credential to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -260,10 +578,14 @@ abstract class $CredentialCopyWith<$Res> {
     String? notes,
     List<CustomField> customFields,
     String? categoryId,
+    String? folderId,
     bool isFavorite,
     DateTime createdAt,
     DateTime updatedAt,
+    PasskeyMetadata? passkeyMetadata,
   });
+
+  $PasskeyMetadataCopyWith<$Res>? get passkeyMetadata;
 }
 
 /// @nodoc
@@ -290,9 +612,11 @@ class _$CredentialCopyWithImpl<$Res, $Val extends Credential>
     Object? notes = freezed,
     Object? customFields = null,
     Object? categoryId = freezed,
+    Object? folderId = freezed,
     Object? isFavorite = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? passkeyMetadata = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -332,6 +656,10 @@ class _$CredentialCopyWithImpl<$Res, $Val extends Credential>
                 ? _value.categoryId
                 : categoryId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            folderId: freezed == folderId
+                ? _value.folderId
+                : folderId // ignore: cast_nullable_to_non_nullable
+                      as String?,
             isFavorite: null == isFavorite
                 ? _value.isFavorite
                 : isFavorite // ignore: cast_nullable_to_non_nullable
@@ -344,9 +672,27 @@ class _$CredentialCopyWithImpl<$Res, $Val extends Credential>
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
                       as DateTime,
+            passkeyMetadata: freezed == passkeyMetadata
+                ? _value.passkeyMetadata
+                : passkeyMetadata // ignore: cast_nullable_to_non_nullable
+                      as PasskeyMetadata?,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of Credential
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PasskeyMetadataCopyWith<$Res>? get passkeyMetadata {
+    if (_value.passkeyMetadata == null) {
+      return null;
+    }
+
+    return $PasskeyMetadataCopyWith<$Res>(_value.passkeyMetadata!, (value) {
+      return _then(_value.copyWith(passkeyMetadata: value) as $Val);
+    });
   }
 }
 
@@ -369,10 +715,15 @@ abstract class _$$CredentialImplCopyWith<$Res>
     String? notes,
     List<CustomField> customFields,
     String? categoryId,
+    String? folderId,
     bool isFavorite,
     DateTime createdAt,
     DateTime updatedAt,
+    PasskeyMetadata? passkeyMetadata,
   });
+
+  @override
+  $PasskeyMetadataCopyWith<$Res>? get passkeyMetadata;
 }
 
 /// @nodoc
@@ -398,9 +749,11 @@ class __$$CredentialImplCopyWithImpl<$Res>
     Object? notes = freezed,
     Object? customFields = null,
     Object? categoryId = freezed,
+    Object? folderId = freezed,
     Object? isFavorite = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? passkeyMetadata = freezed,
   }) {
     return _then(
       _$CredentialImpl(
@@ -440,6 +793,10 @@ class __$$CredentialImplCopyWithImpl<$Res>
             ? _value.categoryId
             : categoryId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        folderId: freezed == folderId
+            ? _value.folderId
+            : folderId // ignore: cast_nullable_to_non_nullable
+                  as String?,
         isFavorite: null == isFavorite
             ? _value.isFavorite
             : isFavorite // ignore: cast_nullable_to_non_nullable
@@ -452,6 +809,10 @@ class __$$CredentialImplCopyWithImpl<$Res>
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
                   as DateTime,
+        passkeyMetadata: freezed == passkeyMetadata
+            ? _value.passkeyMetadata
+            : passkeyMetadata // ignore: cast_nullable_to_non_nullable
+                  as PasskeyMetadata?,
       ),
     );
   }
@@ -470,9 +831,11 @@ class _$CredentialImpl implements _Credential {
     this.notes,
     final List<CustomField> customFields = const [],
     this.categoryId,
+    this.folderId,
     this.isFavorite = false,
     required this.createdAt,
     required this.updatedAt,
+    this.passkeyMetadata,
   }) : _customFields = customFields;
 
   factory _$CredentialImpl.fromJson(Map<String, dynamic> json) =>
@@ -488,7 +851,7 @@ class _$CredentialImpl implements _Credential {
   final String? username;
   @override
   final String? password;
-  // stored encrypted
+  // stored encrypted; holds passkey private key handle too
   @override
   final String? website;
   @override
@@ -507,6 +870,8 @@ class _$CredentialImpl implements _Credential {
   @override
   final String? categoryId;
   @override
+  final String? folderId;
+  @override
   @JsonKey()
   final bool isFavorite;
   @override
@@ -514,9 +879,13 @@ class _$CredentialImpl implements _Credential {
   @override
   final DateTime updatedAt;
 
+  /// Present only when [type] == [CredentialType.passkey]
+  @override
+  final PasskeyMetadata? passkeyMetadata;
+
   @override
   String toString() {
-    return 'Credential(id: $id, type: $type, title: $title, username: $username, password: $password, website: $website, notes: $notes, customFields: $customFields, categoryId: $categoryId, isFavorite: $isFavorite, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Credential(id: $id, type: $type, title: $title, username: $username, password: $password, website: $website, notes: $notes, customFields: $customFields, categoryId: $categoryId, folderId: $folderId, isFavorite: $isFavorite, createdAt: $createdAt, updatedAt: $updatedAt, passkeyMetadata: $passkeyMetadata)';
   }
 
   @override
@@ -539,12 +908,16 @@ class _$CredentialImpl implements _Credential {
             ) &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
+            (identical(other.folderId, folderId) ||
+                other.folderId == folderId) &&
             (identical(other.isFavorite, isFavorite) ||
                 other.isFavorite == isFavorite) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.passkeyMetadata, passkeyMetadata) ||
+                other.passkeyMetadata == passkeyMetadata));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -560,9 +933,11 @@ class _$CredentialImpl implements _Credential {
     notes,
     const DeepCollectionEquality().hash(_customFields),
     categoryId,
+    folderId,
     isFavorite,
     createdAt,
     updatedAt,
+    passkeyMetadata,
   );
 
   /// Create a copy of Credential
@@ -590,9 +965,11 @@ abstract class _Credential implements Credential {
     final String? notes,
     final List<CustomField> customFields,
     final String? categoryId,
+    final String? folderId,
     final bool isFavorite,
     required final DateTime createdAt,
     required final DateTime updatedAt,
+    final PasskeyMetadata? passkeyMetadata,
   }) = _$CredentialImpl;
 
   factory _Credential.fromJson(Map<String, dynamic> json) =
@@ -607,7 +984,7 @@ abstract class _Credential implements Credential {
   @override
   String? get username;
   @override
-  String? get password; // stored encrypted
+  String? get password; // stored encrypted; holds passkey private key handle too
   @override
   String? get website;
   @override
@@ -617,11 +994,17 @@ abstract class _Credential implements Credential {
   @override
   String? get categoryId;
   @override
+  String? get folderId;
+  @override
   bool get isFavorite;
   @override
   DateTime get createdAt;
   @override
   DateTime get updatedAt;
+
+  /// Present only when [type] == [CredentialType.passkey]
+  @override
+  PasskeyMetadata? get passkeyMetadata;
 
   /// Create a copy of Credential
   /// with the given fields replaced by the non-null parameter values.

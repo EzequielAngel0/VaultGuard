@@ -26,6 +26,8 @@ import '../../core/infrastructure/security/i_security_service.dart' as _i1023;
 import '../../core/infrastructure/security/security_service_impl.dart'
     as _i1063;
 import '../../core/infrastructure/security/session_manager.dart' as _i795;
+import '../../core/services/autofill_service.dart' as _i923;
+import '../../core/services/biometric_auth_service.dart' as _i455;
 import '../../core/services/recovery_service.dart' as _i323;
 import '../../core/services/security_audit_service.dart' as _i400;
 import '../../core/services/vault_export_service.dart' as _i332;
@@ -66,6 +68,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.secureStorage,
     );
     gh.lazySingleton<_i795.SessionManager>(() => _i795.SessionManager());
+    gh.lazySingleton<_i923.AutofillSettingsService>(
+      () => _i923.AutofillSettingsService(),
+    );
+    gh.lazySingleton<_i455.BiometricAuthService>(
+      () => _i455.BiometricAuthService(),
+    );
     gh.lazySingleton<_i1023.ISecurityService>(
       () => _i1063.SecurityServiceImpl(),
     );
@@ -112,9 +120,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i366.ICredentialRepository>(
       () => _i316.CredentialRepositoryImpl(
         gh<_i753.CredentialDao>(),
+        gh<_i386.PasswordHistoryDao>(),
         gh<_i1023.ISecurityService>(),
         gh<_i795.SessionManager>(),
       ),
+    );
+    gh.lazySingleton<_i923.AutofillQueryHandler>(
+      () => _i923.AutofillQueryHandler(
+        gh<_i366.ICredentialRepository>(),
+        gh<_i795.SessionManager>(),
+      ),
+    );
+    gh.lazySingleton<_i472.GetCredentialsUseCase>(
+      () => _i472.GetCredentialsUseCase(gh<_i366.ICredentialRepository>()),
+    );
+    gh.lazySingleton<_i472.SaveCredentialUseCase>(
+      () => _i472.SaveCredentialUseCase(gh<_i366.ICredentialRepository>()),
+    );
+    gh.lazySingleton<_i472.DeleteCredentialUseCase>(
+      () => _i472.DeleteCredentialUseCase(gh<_i366.ICredentialRepository>()),
     );
     gh.lazySingleton<_i400.SecurityAuditService>(
       () => _i400.SecurityAuditService(gh<_i366.ICredentialRepository>()),
@@ -143,15 +167,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i795.SessionManager>(),
         gh<_i286.IVaultRepository>(),
       ),
-    );
-    gh.lazySingleton<_i472.GetCredentialsUseCase>(
-      () => _i472.GetCredentialsUseCase(gh<_i366.ICredentialRepository>()),
-    );
-    gh.lazySingleton<_i472.SaveCredentialUseCase>(
-      () => _i472.SaveCredentialUseCase(gh<_i366.ICredentialRepository>()),
-    );
-    gh.lazySingleton<_i472.DeleteCredentialUseCase>(
-      () => _i472.DeleteCredentialUseCase(gh<_i366.ICredentialRepository>()),
     );
     return this;
   }

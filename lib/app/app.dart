@@ -40,7 +40,7 @@ class _AppState extends ConsumerState<App> {
       // Reset inactivity timer on any pointer event (tap, scroll, drag).
       onPointerDown: (_) => _onUserActivity(),
       child: MaterialApp.router(
-        title: 'VaultGuard',
+        title: 'SoloKey',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.dark().copyWith(
           pageTransitionsTheme: const PageTransitionsTheme(

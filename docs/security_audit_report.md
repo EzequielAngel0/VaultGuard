@@ -1,4 +1,4 @@
-# VaultGuard — Reporte de Seguridad
+# SoloKey — Reporte de Seguridad
 **Fecha:** 2026-03-30  
 **Versión analizada:** 1.0.0+1  
 **Analista:** Auditor_Seguridad_Mobile (Antigravity AI)
@@ -7,7 +7,7 @@
 
 ## 📋 Resumen Ejecutivo
 
-VaultGuard presenta una **arquitectura criptográfica sólida y bien diseñada**. El uso de Argon2id, AES-256-GCM, aislamiento en `Isolate`, borrado activo de la clave en memoria (`fillRange(0)`), `FLAG_SECURE` nativo en Android y limpieza automática del portapapeles demuestran un nivel de madurez de seguridad superior al promedio de las aplicaciones móviles.
+SoloKey presenta una **arquitectura criptográfica sólida y bien diseñada**. El uso de Argon2id, AES-256-GCM, aislamiento en `Isolate`, borrado activo de la clave en memoria (`fillRange(0)`), `FLAG_SECURE` nativo en Android y limpieza automática del portapapeles demuestran un nivel de madurez de seguridad superior al promedio de las aplicaciones móviles.
 
 El análisis no encontró vulnerabilidades críticas que expongan directamente la bóveda de datos. Sin embargo, se identificaron **6 hallazgos de riesgo medio/bajo** con caminos de explotación teóricos que deben ser evaluados antes de una distribución pública amplia.
 
@@ -76,8 +76,8 @@ No se encontraron rutas de acceso directo a credenciales sin la contraseña maes
 
 #### [SEC-005] `android:label` del Manifest no usa nombre de branding
 - **Archivo:** `android/app/src/main/AndroidManifest.xml` — Línea 10
-- **Descripción:** El label de la aplicación en Android es `"password_manager"` (el nombre técnico del paquete) en lugar del nombre de marca `"VaultGuard"`. Esto es un problema menor de privacidad: en la lista de aplicaciones instaladas del dispositivo o en notificaciones del sistema, la app puede aparecer con un nombre técnico que la identifica explícitamente como un gestor de contraseñas, lo que puede ser indeseable para usuarios que buscan privacidad.
-- **Recomendación:** Cambiar a `android:label="VaultGuard"` o mejor aún, usar `android:label="@string/app_name"` con el string definido en `res/values/strings.xml`.
+- **Descripción:** El label de la aplicación en Android es `"password_manager"` (el nombre técnico del paquete) en lugar del nombre de marca `"SoloKey"`. Esto es un problema menor de privacidad: en la lista de aplicaciones instaladas del dispositivo o en notificaciones del sistema, la app puede aparecer con un nombre técnico que la identifica explícitamente como un gestor de contraseñas, lo que puede ser indeseable para usuarios que buscan privacidad.
+- **Recomendación:** Cambiar a `android:label="SoloKey"` o mejor aún, usar `android:label="@string/app_name"` con el string definido en `res/values/strings.xml`.
 
 ---
 
@@ -116,10 +116,10 @@ No se encontraron rutas de acceso directo a credenciales sin la contraseña maes
 | SEC-001 | Alta | Muy bajo | Reemplazar `Clipboard.setData()` por `ClipboardService.copySecure()` en recovery_screen |
 | SEC-004 | Media | Muy bajo | Cambiar default de `obscureOnBackground` a `true` |
 | SEC-006 | Media | Muy bajo | Añadir `android:allowBackup="false"` al Manifest |
-| SEC-005 | Baja | Muy bajo | Cambiar `android:label` a `"VaultGuard"` |
+| SEC-005 | Baja | Muy bajo | Cambiar `android:label` a `"SoloKey"` |
 | SEC-002 | Baja | Bajo | Eliminar archivo temporal `.vgvault` tras exportar |
 | SEC-003 | Informativo | Alto | Documentar como limitación conocida de Dart |
 
 ---
 
-*Reporte generado el 2026-03-30 para VaultGuard v1.0.0+1*
+*Reporte generado el 2026-03-30 para SoloKey v1.0.0+1*

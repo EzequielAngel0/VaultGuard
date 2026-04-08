@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:label="VaultGuard"
+        android:label="SoloKey"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
@@ -39,7 +39,28 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!--
+            SoloKey AutofillService — provides credential suggestions to other apps.
+            Requires android.permission.BIND_AUTOFILL_SERVICE so only the system
+            can bind to this service (security requirement).
+            Requires API 26+; will be silently ignored on older versions.
+        -->
+        <service
+            android:name=".SoloKeyAutofillService"
+            android:label="SoloKey"
+            android:exported="true"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.autofill"
+                android:resource="@xml/autofill_service_config" />
+        </service>
+
     </application>
+
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
